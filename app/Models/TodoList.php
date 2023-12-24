@@ -17,6 +17,12 @@ class TodoList extends Model
         'body'
     ];
 
+    public const STATUS = [
+        'PENDING' => 'pending',
+        'ONGOING' => 'ongoing',
+        'COMPLETED' => 'completed',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

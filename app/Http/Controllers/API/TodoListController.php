@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Todo\StoreRequest;
 use App\Http\Requests\Todo\UpdateRequest;
+use App\Http\Requests\Todo\UpdateStatusRequest;
 use App\Http\Resources\TodoListResource;
 use App\Models\TodoList;
 use Illuminate\Http\JsonResponse;
@@ -15,7 +16,18 @@ class TodoListController extends Controller
     public function index(): JsonResponse
     {
         try {
-            return $this->successResponse(TodoList::with('user')->get());
+            return $this->successResponse(
+                TodoListResource::collection(TodoList::with('user')->get())
+            );
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage());
+        }
+    }
+
+    public function view(TodoList $todoList): JsonResponse
+    {
+        try {
+            return $this->successResponse(TodoListResource::make($todoList));
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage());
         }
@@ -45,6 +57,23 @@ class TodoListController extends Controller
             $data = $request->validated();
 
             $todoList->update($data);
+            return $this->successResponse(
+                TodoListResource::make($todoList)
+            );
+
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage());
+        }
+    }
+
+    public function updateStatus(UpdateStatusRequest $request, TodoList $todoList): JsonResponse
+    {
+        try {
+            $status = $request->validated()['status'];
+
+            $todoList->status = $status;
+            $todoList->save();
+
             return $this->successResponse(
                 TodoListResource::make($todoList)
             );

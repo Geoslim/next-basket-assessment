@@ -19,6 +19,7 @@ class TodoListResource extends JsonResource
             'id' => $this->{'id'},
             'title' => $this->{'title'},
             'body' => $this->{'body'},
+            'status' => $this->{'status'},
             'user' => UserResource::make($this->whenLoaded('user'))
         ];
     }

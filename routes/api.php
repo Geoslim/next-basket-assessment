@@ -25,7 +25,9 @@ Route::prefix('auth')->group(function () {
 
 Route::middleware('auth:sanctum')->prefix('todo')->group(function () {
     Route::get('', [TodoListController::class, 'index']);
+    Route::get('view/{todoList}', [TodoListController::class, 'view']);
     Route::post('store', [TodoListController::class, 'store']);
     Route::post('update/{todoList}', [TodoListController::class, 'update']);
+    Route::post('update-status/{todoList}', [TodoListController::class, 'updateStatus']);
     Route::delete('delete/{todoList}', [TodoListController::class, 'destroy']);
 });
